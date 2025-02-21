@@ -29,7 +29,7 @@ function Question({ slug }: { slug: IQuestion["slug"] }) {
 
   useEffect(() => {
     setTheme(questionData?.pageTheme || "light");
-  });
+  }, []);
 
   useEffect(() => {
     const hasData = !answerData || Object.keys(answerData).length === 0;
