@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  /*colors*/
+  --lavender-blush: #FFF0F0;
+  --raisin-black: #201F1F;
+  --dark-charcoal:#333333;
+  --bright-gray: #EAEEF7;
+  --ghost-white: #FBFBFF;
+  --purple-heart: #6A3AA2;
+
+  --primary-gradient: linear-gradient(165.54deg, #141333 -33.39%, #202261 15.89%, #543C97 55.84%, #6939A2 74.96%);
+
+  --shadow-violet: 2px 2px 6px 0px rgba(84, 60, 151, 0.25);
+  --shadow-silver: 0px 4px 4px 0px rgba(216, 214, 214, 0.25);
+  /**/
+
+  --background: var(--lavender-blush);
+  --foreground: var(--raisin-black);
+  --primary-color: var(--dark-charcoal);
+
+  --option-color: var(--dark-charcoal);
+  --btn-color: var(--raisin-black);
+  --btn-bg: var(--raisin-black);
+
+
+  --primary-shadow:  var(--shadow-violet);
+  --primary-background: var(--bright-gray);
+}
+
+/* Темна тема */
+
+.dark {
+  --background: var(--primary-gradient);
+  --foreground: var(--lavender-blush);
+  --primary-color: var(--ghost-white);
+
+  --option-color: var(--dark-charcoal);
+  --btn-color: var(--purple-heart);
+  --btn-bg: var(--ghost-white);
+
+  --primary-shadow:  var(--shadow-silver);
+  --primary-background: var(--ghost-white);
+}
+
+/*  */
+
+body {
+  color: var(--primary-color);
+  background: var(--background);
+  font-family: "Open Sans", sans-serif;
+  transition: all 0.45s, color 0.45s;
+}
