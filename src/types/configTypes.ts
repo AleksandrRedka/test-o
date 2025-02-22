@@ -10,8 +10,8 @@ export interface IQuestion {
   pageTheme?: "dark" | "light";
   slug: Routes;
   title: (answerData?: Record<Routes, IOption>) => string;
-  subtitle?: (answerData?: Record<Routes, IOption>) => string;
-  description?: (answerData?: Record<Routes, IOption>) => string;
+  subtitle?: string;
+  description?: string;
   options?: IOption[];
   backPath?: string;
   button?: {

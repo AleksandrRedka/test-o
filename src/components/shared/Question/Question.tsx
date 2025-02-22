@@ -22,32 +22,25 @@ function Question({ slug }: { slug: IQuestion["slug"] }) {
   const { setTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
-  const questionData = config.questions?.[slug] ?? {};
+  const { title, subtitle, description, options, button, pageTheme } =
+    config.questions?.[slug] ?? {};
   const dispatch = useDispatch();
   const answerData = useSelector(selectAnswer);
-  const answerDataBySlug = useSelector(selectAnswerField(slug));
+  const answerToQuestion = useSelector(selectAnswerField(slug));
 
   useEffect(() => {
-    setTheme(questionData?.pageTheme || "light");
-  }, []);
+    setTheme(pageTheme || "light");
 
-  useEffect(() => {
-    const hasData = !answerData || Object.keys(answerData).length === 0;
+    const isEmptyAnswer = !answerData || Object.keys(answerData).length === 0;
     const isEntryPage = ["/", `/${ROUTE.GENDER}`].includes(pathname);
 
-    if (hasData && !isEntryPage) {
+    if (isEmptyAnswer && !isEntryPage) {
       router.push(`/${ROUTE.GENDER}`); // Редірект на головну, якщо даних немає
     }
-  }, [answerData, router]);
-
-  const questionTitle = questionData?.title && questionData?.title(answerData);
-  const questionSubtitle = questionData?.subtitle && questionData?.subtitle(answerData);
-  const questionDescription = questionData?.description && questionData?.description(answerData);
-  const questionOptions = questionData?.options ?? [];
-  const questionButton = questionData?.button;
+  }, []);
 
   const handlerClickButton = () => {
-    const nextPage = questionButton?.path(answerData);
+    const nextPage = button?.path(answerData);
     if (nextPage) router.push(nextPage);
   };
 
@@ -58,18 +51,16 @@ function Question({ slug }: { slug: IQuestion["slug"] }) {
 
   return (
     <>
-      {questionTitle && <Typography text={questionTitle} className="font-bold text-2xl" />}
-      {questionSubtitle && <Typography text={questionSubtitle} className="font-bold text-lg" />}
-      {questionDescription && (
-        <Typography text={questionDescription} className="font-bold text-lg" />
-      )}
+      {title && <Typography text={title(answerData)} className="font-bold text-2xl" />}
+      {subtitle && <Typography text={subtitle} className="font-bold text-lg" />}
+      {description && <Typography text={description} className="font-bold text-lg" />}
       <Select
         name={slug}
-        options={questionOptions}
-        currentValue={answerDataBySlug}
+        options={options}
+        currentValue={answerToQuestion}
         onChange={handlerChange}
       />
-      {questionButton && <Button onClick={handlerClickButton}> {questionButton.text} </Button>}
+      {button && <Button onClick={handlerClickButton}> {button?.text} </Button>}
     </>
   );
 }

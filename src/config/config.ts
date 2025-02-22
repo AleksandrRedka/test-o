@@ -101,9 +101,8 @@ const config: IConfig = {
       pageTheme: "dark",
       slug: ROUTE.HOW_IT_WORK,
       title: () => "Do you tend to overthink?",
-      description: () =>
+      description:
         "We analyze hundreds of data points to create your unique astrological blueprint. This is combined with AI to tailor-make your astrological insights, based on your answers. We’re going to change your relationship with astrology.",
-      backPath: ROUTE.SINGLE_OVERTHINK,
       button: {
         path: (answerData) =>
           answerData?.["single-overthink"]?.id === "1"
@@ -111,6 +110,7 @@ const config: IConfig = {
             : ROUTE.SINGLE_CONTROL,
         text: "Next",
       },
+      backPath: ROUTE.SINGLE_OVERTHINK,
     },
 
     [ROUTE.SINGLE_PRIORITIES]: {
@@ -260,7 +260,7 @@ const config: IConfig = {
     [ROUTE.STATEMENT]: {
       slug: ROUTE.STATEMENT,
       title: () => "Do you agree with the statement below?",
-      subtitle: () => "This highlights the duality of your masculine and feminine energies.",
+      subtitle: "This highlights the duality of your masculine and feminine energies.",
       options: [
         {
           id: "1",
