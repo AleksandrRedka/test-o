@@ -6,7 +6,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import config from "@/config/config";
-import { IOption, IQuestion } from "@/types/configTypes";
+import {
+  ElementDataType,
+  ElementKey,
+  IButton,
+  IButtonData,
+  IElements,
+  IOption,
+  IQuestion,
+  ISelectData,
+  IStructureElement,
+  ITypographyData,
+} from "@/types/configTypes";
 import {
   selectAnswer,
   selectAnswerField,
@@ -18,12 +29,18 @@ import Select from "@/components/shared/Select/Select";
 import Button from "@/components/shared/Button/Button";
 import { ROUTE } from "@/constants/routes";
 
+const typographyStyles: Record<string, string> = {
+  title: "font-bold text-2xl",
+  subtitle: "font-bold text-lg",
+  description: "font-bold text-lg",
+};
+
 function Question({ slug }: { slug: IQuestion["slug"] }) {
   const { setTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
-  const { title, subtitle, description, options, button, pageTheme } =
-    config.questions?.[slug] ?? {};
+  const { pageTheme, structure = [] } = config.questions?.[slug] ?? {};
+
   const dispatch = useDispatch();
   const answerData = useSelector(selectAnswer);
   const answerToQuestion = useSelector(selectAnswerField(slug));
@@ -39,8 +56,8 @@ function Question({ slug }: { slug: IQuestion["slug"] }) {
     }
   }, []);
 
-  const handlerClickButton = () => {
-    const nextPage = button?.path(answerData);
+  const handlerClickButton = (data: IButtonData) => {
+    const nextPage = data?.path(answerData);
     if (nextPage) router.push(nextPage);
   };
 
@@ -49,20 +66,24 @@ function Question({ slug }: { slug: IQuestion["slug"] }) {
     if (option?.nextPage) router.push(`/${option.nextPage}`);
   };
 
-  return (
-    <>
-      {title && <Typography text={title(answerData)} className="font-bold text-2xl" />}
-      {subtitle && <Typography text={subtitle} className="font-bold text-lg" />}
-      {description && <Typography text={description} className="font-bold text-lg" />}
-      <Select
-        name={slug}
-        options={options}
-        currentValue={answerToQuestion}
-        onChange={handlerChange}
+  const components = {
+    Typography: (props: ITypographyData) => (
+      <Typography
+        text={props?.text(answerData)}
+        className={`${typographyStyles[props?.style]} ${props.className}`}
+        {...(props as Omit<ITypographyData, "text">)}
       />
-      {button && <Button onClick={handlerClickButton}> {button?.text} </Button>}
-    </>
-  );
+    ),
+    Select: (props: ISelectData) => (
+      <Select {...props} name={slug} currentValue={answerToQuestion} onChange={handlerChange} />
+    ),
+    Button: (props: IButtonData) => <Button {...props} onClick={() => handlerClickButton(props)} />,
+  };
+
+  return structure.map(({ id, componentName, data }) => {
+    const Component = components[componentName];
+    return Component ? <Component key={id} {...(data as any)} /> : null;
+  });
 }
 
 export default Question;

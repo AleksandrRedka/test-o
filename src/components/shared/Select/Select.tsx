@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { IOption, IQuestion } from "@/types/configTypes";
+import { IOption, ISelectData } from "@/types/configTypes";
 
 const styles = {
   option: {
@@ -8,17 +8,19 @@ const styles = {
     active: "bg-primaryGradient text-optionSelected",
   },
 };
+
+interface Props extends ISelectData {
+  name: string;
+  currentValue: IOption | null;
+  onChange: (option: IOption) => void;
+}
+
 export default function Select({
   options = [],
   name,
   currentValue,
   onChange,
-}: {
-  options: IQuestion["options"];
-  name: string;
-  currentValue: IOption | null;
-  onChange: (option: IOption) => void;
-}): React.ReactNode {
+}: Props): React.ReactNode {
   if (!options.length) return null;
 
   const renderOption = (option: IOption) => {
